@@ -12,12 +12,7 @@ function getRandomNumber(firstNumber, secondNumber) {
 getRandomNumber(4,8);
 
 function getRandomCoordinate(firstCoordinate, secondCoordinate, decimal) {
-  if (firstCoordinate < 0 || firstCoordinate >= secondCoordinate) {
-    return 'Одно из чисел отрицательное, либо первое значение больше или равно второму.';
-  }
-
-  const randomCoordinate = (Math.random() * (secondCoordinate - firstCoordinate)) + firstCoordinate;
-  return +randomCoordinate.toFixed(decimal);
+  return (firstCoordinate < 0 || firstCoordinate >= secondCoordinate) ? 'Одно из чисел отрицательное, либо первое значение больше или равно второму.' : +((Math.random() * (secondCoordinate - firstCoordinate)) + firstCoordinate).toFixed(decimal);
 }
 
 getRandomCoordinate(1.1,1.2,4);
