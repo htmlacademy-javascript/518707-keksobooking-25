@@ -1,18 +1,17 @@
-function getRandomNumber(firstNumber, secondNumber) {
-  if (firstNumber < 0 || firstNumber >= secondNumber) {
-    return 'Одно из чисел отрицательное, либо первое значение больше или равно второму.';
-  }
+const getRandomPositiveInteger = (a, b) => {
+  const lower = Math.ceil(Math.min(Math.abs(a), Math.abs(b)));
+  const upper = Math.floor(Math.max(Math.abs(a), Math.abs(b)));
 
-  firstNumber = Math.ceil(firstNumber);
-  secondNumber = Math.floor(secondNumber);
+  const result = Math.random() * (upper - lower + 1) + lower;
 
-  return Math.floor(Math.random() * (secondNumber - firstNumber + 1)) + firstNumber;
-}
+  return Math.floor(result);
+};
 
-getRandomNumber(4,8);
+const getRandomPositiveFloat = (a, b, digits = 1) => {
+  const lower = Math.min(Math.abs(a), Math.abs(b));
+  const upper = Math.max(Math.abs(a), Math.abs(b));
 
-function getRandomCoordinate(firstCoordinate, secondCoordinate, decimal) {
-  return (firstCoordinate < 0 || firstCoordinate >= secondCoordinate) ? 'Одно из чисел отрицательное, либо первое значение больше или равно второму.' : +((Math.random() * (secondCoordinate - firstCoordinate)) + firstCoordinate).toFixed(decimal);
-}
+  const result = Math.random() * (upper - lower) + lower;
 
-getRandomCoordinate(1.1,1.2,4);
+  return +result.toFixed(digits);
+};
