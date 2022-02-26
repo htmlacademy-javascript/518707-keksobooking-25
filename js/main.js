@@ -109,7 +109,7 @@ const getChangedArray = (array) => {
   return newArray;
 };
 
-const createOffer = function () {
+const createOffer = () => {
   const offerLat = getRandomPositiveFloat(LAT_MIN, LAT_MAX, COORD_DIGITS);
   const offerLng = getRandomPositiveFloat(LNG_MIN, LNG_MAX, COORD_DIGITS);
 
