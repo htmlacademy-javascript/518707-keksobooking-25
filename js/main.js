@@ -7,7 +7,7 @@ const offersData = {
     'Семейное гнёздышко',
     'Просторный чулан'
   ],
-  DESCRIPTOINS: [
+  DESCRIPTIONS: [
     'Вам захочется провести здесь остаток жизни',
     'Больше, чем просто жильё',
     'Дружелюбные тараканы скрасят Ваше одиночество',
@@ -32,19 +32,17 @@ const offersData = {
     'https://assets.htmlacademy.ru/content/intensive/javascript-1/keksobooking/claire-rendall-b6kAwr1i0Iw.jpg'
   ],
   TYPES: ['palace', 'flat', 'house', 'bungalow', 'hotel'],
-  CHECKIN_TIME: ['12:00', '13:00', '14:00'],
-  CHECKOUT_TIME: ['12:00', '13:00', '14:00'],
+  TIMES: ['12:00', '13:00', '14:00'],
   FEATURES: ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner']
 };
 
 const {
   TITLES,
-  DESCRIPTOINS,
+  DESCRIPTIONS,
   AVATARS,
   PHOTOS,
   TYPES,
-  CHECKIN_TIME,
-  CHECKOUT_TIME,
+  TIMES,
   FEATURES
 } = offersData;
 
@@ -112,10 +110,11 @@ const getChangedArray = (array) => {
 const createOffer = () => {
   const offerLat = getRandomPositiveFloat(LAT_MIN, LAT_MAX, COORD_DIGITS);
   const offerLng = getRandomPositiveFloat(LNG_MIN, LNG_MAX, COORD_DIGITS);
+  const offerAvatar = AVATARS.splice(getRandomPositiveInteger(0, AVATARS.length - 1), 1)[0];
 
   return {
     author: {
-      avatar: AVATARS.splice(getRandomPositiveInteger(0, AVATARS.length - 1), 1)[0]
+      avatar: offerAvatar
     },
     offer: {
       title: getRandomArrayElement(TITLES),
@@ -124,10 +123,10 @@ const createOffer = () => {
       type: getRandomArrayElement(TYPES),
       rooms: getRandomPositiveInteger(ROOMS_MIN, ROOMS_MAX),
       guests: getRandomPositiveInteger(GUESTS_MIN, GUESTS_MAX),
-      checkin: getRandomArrayElement(CHECKIN_TIME),
-      checkout: getRandomArrayElement(CHECKOUT_TIME),
+      checkin: getRandomArrayElement(TIMES),
+      checkout: getRandomArrayElement(TIMES),
       features: getChangedArray(FEATURES),
-      description: getRandomArrayElement(DESCRIPTOINS),
+      description: getRandomArrayElement(DESCRIPTIONS),
       photos: getChangedArray(PHOTOS)
     },
     location: {
