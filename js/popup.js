@@ -41,7 +41,7 @@ offers.forEach((offer) => {
   });
 
   Array.from(newOffer.children).forEach((element) => {
-    if (!element.innerHTML) {
+    if (!element.innerHTML && element.tagName !== 'IMG') {
       element.remove();
     }
   });
