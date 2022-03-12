@@ -1,2 +1,3 @@
 import './popup.js';
-import './form.js';
+import './form-condition.js';
+import './form-validation.js';
