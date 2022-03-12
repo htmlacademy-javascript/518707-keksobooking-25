@@ -18,13 +18,13 @@ adForm.querySelector('#address').value = 'Значение по умолчани
 
 
 Pristine.addValidator('min-length',
-  (value, length) => value.length >= length,
-  (value, length) => `Минимальное значение ${length[1]} символов, осталось добавить: ${length[1] - value.length}.`
+  (value, minlength) => value.length >= minlength,
+  (value, minlength) => `Минимальное значение ${minlength[1]} символов, осталось добавить: ${minlength[1] - value.length}.`
 );
 
 Pristine.addValidator('max-length',
-  (value, length) => value.length <= length,
-  (value, length) => `Превышено максимальное значение - ${length[1]} символов, текущее значение: ${value.length}.`
+  (value, maxlength) => value.length <= maxlength,
+  (value, maxlength) => `Превышено максимальное значение - ${maxlength[1]} символов, текущее значение: ${value.length}.`
 );
 
 const pristine = new Pristine(adForm,
@@ -37,7 +37,7 @@ const pristine = new Pristine(adForm,
 
 pristine.addValidator(adFormOfferPrice,
   (value) => value >= TYPES_MIN_PRICE[adFormOfferType.value],
-  () => `Минимальная цена выбранного типа размещения: ${TYPES_MIN_PRICE[adFormOfferType.value]} руб.`
+  `Минимальная цена выбранного типа размещения: ${TYPES_MIN_PRICE[adFormOfferType.value]} руб.`
 );
 adFormOfferType.addEventListener('change', () => {
   if (adFormOfferPrice.value) {
@@ -48,13 +48,8 @@ adFormOfferType.addEventListener('change', () => {
 
 pristine.addValidator(adFormOfferCapacity,
   (value) => (!+value && +adFormOfferRoomNumber.value === MAX_ROOMS) || (+value && +value <= +adFormOfferRoomNumber.value && +adFormOfferRoomNumber.value !== MAX_ROOMS),
-  () => {
-    if (+adFormOfferRoomNumber.value === MAX_ROOMS) {
-      return 'Столько комнат не для гостей.';
-    } else {
-      return `Выберите количество гостей, максимум - ${adFormOfferRoomNumber.value}.`;
-    }
-  });
+  () => +adFormOfferRoomNumber.value === MAX_ROOMS ? 'Столько комнат не для гостей.' : `Выберите количество гостей, максимум - ${adFormOfferRoomNumber.value}.`
+);
 adFormOfferRoomNumber.addEventListener('change', () => pristine.validate(adFormOfferCapacity));
 
 adForm.addEventListener('submit', (evt) => {
