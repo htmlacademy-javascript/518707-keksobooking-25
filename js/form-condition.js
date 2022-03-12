@@ -3,7 +3,7 @@ const adFormFieldsets = adForm.querySelectorAll('fieldset');
 
 const mapForm = document.querySelector('.map__filters');
 const mapFormFilters = mapForm.querySelectorAll('.map__filter');
-const mapFormFeatures = mapForm.querySelector('.map__features');
+const mapFormFeaturesList = mapForm.querySelector('.map__features');
 
 const changeFormCondition = (isDisabled) => {
   if (isDisabled) {
@@ -14,7 +14,7 @@ const changeFormCondition = (isDisabled) => {
     mapForm.classList.remove('map__filters--disabled');
   }
 
-  mapFormFeatures.disabled = isDisabled;
+  mapFormFeaturesList.disabled = isDisabled;
   adFormFieldsets.forEach((element) => {
     element.disabled = isDisabled;
   });
