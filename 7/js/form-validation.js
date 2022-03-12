@@ -1,3 +1,5 @@
+import '../pristine/pristine.min.js';
+
 const TYPES_MIN_PRICE = {
   'palace': 10000,
   'flat': 1000,
