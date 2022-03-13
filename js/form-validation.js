@@ -14,10 +14,15 @@ const adFormOfferType = adForm.querySelector('#type');
 const adFormOfferPrice = adForm.querySelector('#price');
 const adFormOfferRoomNumber = adForm.querySelector('#room_number');
 const adFormOfferCapacity = adForm.querySelector('#capacity');
+const adFormOfferTimein = adForm.querySelector('#timein');
+const adFormOfferTimeout = adForm.querySelector('#timeout');
 
 //Удалить после реализации карты.
 adForm.querySelector('#address').value = 'Значение по умолчанию';
 
+const setEqualElementsValue = (referenceElement, dependentElement) => {
+  dependentElement.value = referenceElement.value;
+};
 
 Pristine.addValidator('min-length',
   (value, minlength) => value.length >= minlength,
@@ -53,6 +58,9 @@ pristine.addValidator(adFormOfferCapacity,
   () => +adFormOfferRoomNumber.value === MAX_ROOMS ? 'Столько комнат не для гостей.' : `Выберите количество гостей, максимум - ${adFormOfferRoomNumber.value}.`
 );
 adFormOfferRoomNumber.addEventListener('change', () => pristine.validate(adFormOfferCapacity));
+
+adFormOfferTimein.addEventListener('change', () => setEqualElementsValue(adFormOfferTimein, adFormOfferTimeout));
+adFormOfferTimeout.addEventListener('change', () => setEqualElementsValue(adFormOfferTimeout, adFormOfferTimein));
 
 adForm.addEventListener('submit', (evt) => {
   evt.preventDefault();
