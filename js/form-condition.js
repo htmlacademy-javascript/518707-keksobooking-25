@@ -23,6 +23,6 @@ const changeFormCondition = (isDisabled) => {
   });
 };
 
-window.addEventListener('DOMContentLoaded', () => changeFormCondition(true));
+changeFormCondition(true);
 
-document.querySelector('.map__canvas').addEventListener('click', () => changeFormCondition(false));
+export const setFormActive = () => changeFormCondition(false);
