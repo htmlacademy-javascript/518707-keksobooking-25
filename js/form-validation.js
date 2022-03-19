@@ -1,5 +1,3 @@
-import '../pristine/pristine.min.js';
-
 const TYPES_MIN_PRICE = {
   'palace': 10000,
   'flat': 1000,
@@ -17,8 +15,7 @@ const adFormOfferCapacity = adForm.querySelector('#capacity');
 const adFormOfferTimein = adForm.querySelector('#timein');
 const adFormOfferTimeout = adForm.querySelector('#timeout');
 
-//Удалить после реализации карты.
-adForm.querySelector('#address').value = 'Значение по умолчанию';
+const adFormSlider = adForm.querySelector('.ad-form__slider');
 
 const setEqualElementsValue = (referenceElement, dependentElement) => {
   dependentElement.value = referenceElement.value;
@@ -44,13 +41,43 @@ const pristine = new Pristine(adForm,
 
 pristine.addValidator(adFormOfferPrice,
   (value) => value >= TYPES_MIN_PRICE[adFormOfferType.value],
-  `Минимальная цена выбранного типа размещения: ${TYPES_MIN_PRICE[adFormOfferType.value]} руб.`
+  () => `Минимальная цена выбранного типа размещения: ${TYPES_MIN_PRICE[adFormOfferType.value]} руб.`
 );
+
+noUiSlider.create(adFormSlider, {
+  start: 0,
+  connect: 'lower',
+  range: {
+    'min': 0,
+    'max': 100000
+  },
+  animate: true,
+  animationDuration: 1200,
+  format: {
+    to: function (value) {
+      return value.toFixed(0);
+    },
+    from: function (value) {
+      return parseFloat(value);
+    }
+  }
+});
+
+adFormSlider.noUiSlider.on('slide', () => {
+  adFormOfferPrice.value = adFormSlider.noUiSlider.get();
+});
+adFormSlider.noUiSlider.on('change', () => {
+  pristine.validate(adFormOfferPrice);
+});
+
+adFormOfferPrice.addEventListener('input', () => +adFormOfferPrice.value <= +adFormOfferPrice.max ? adFormSlider.noUiSlider.set(adFormOfferPrice.value) : adFormSlider.noUiSlider.set(adFormOfferPrice.max));
+
 adFormOfferType.addEventListener('change', () => {
-  if (adFormOfferPrice.value) {
+  adFormSlider.noUiSlider.set(TYPES_MIN_PRICE[adFormOfferType.value]);
+  adFormOfferPrice.placeholder = TYPES_MIN_PRICE[adFormOfferType.value];
+  if (adFormOfferPrice.value > 0) {
     pristine.validate(adFormOfferPrice);
   }
-  adFormOfferPrice.placeholder = TYPES_MIN_PRICE[adFormOfferType.value];
 });
 
 pristine.addValidator(adFormOfferCapacity,

@@ -107,4 +107,4 @@ const createOffer = () => {
   };
 };
 
-export const createOffers = () => Array.from({length: OFFERS_TOTAL}, createOffer);
+export const offers = Array.from({length: OFFERS_TOTAL}, createOffer);

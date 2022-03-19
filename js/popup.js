@@ -1,10 +1,3 @@
-import {createOffers} from './data.js';
-
-const offers = createOffers();
-const offerTemplate = document.querySelector('#card').content.querySelector('.popup');
-const offerPhotoTemplate = offerTemplate.querySelector('.popup__photo');
-const offersFragment = document.createDocumentFragment();
-
 const TYPES_MAP = {
   'palace': 'Дворец',
   'flat': 'Квартира',
@@ -13,7 +6,9 @@ const TYPES_MAP = {
   'hotel': 'Отель'
 };
 
-offers.forEach((offer) => {
+const createPopup = (offer) => {
+  const offerTemplate = document.querySelector('#card').content.querySelector('.popup');
+  const offerPhotoTemplate = offerTemplate.querySelector('.popup__photo');
   const newOffer = offerTemplate.cloneNode(true);
 
   newOffer.querySelector('.popup__avatar').src = offer.author.avatar;
@@ -46,8 +41,7 @@ offers.forEach((offer) => {
     }
   });
 
-  offersFragment.append(newOffer);
-});
+  return newOffer;
+};
 
-const mapCanvas = document.querySelector('#map-canvas');
-mapCanvas.append(offersFragment.children[0]);
+export {createPopup};
