@@ -1,3 +1,5 @@
+const MODAL_REMOVE_DELAY = 3000;
+
 const adForm = document.querySelector('.ad-form');
 const adFormFieldsets = adForm.querySelectorAll('fieldset');
 
@@ -29,7 +31,7 @@ const showModal = (modalType) => {
   document.querySelector('body').appendChild(newModal);
 
   if (modalType === 'success') {
-    setTimeout(() => newModal.remove(), 3000);
+    setTimeout(() => newModal.remove(), MODAL_REMOVE_DELAY);
   } else {
     newModal.querySelector('button').addEventListener('click', () => newModal.remove());
     window.addEventListener('keydown', (evt) => {

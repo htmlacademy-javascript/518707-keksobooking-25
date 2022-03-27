@@ -4,6 +4,9 @@ import {getData} from './server-requests.js';
 
 const CENTER_LAT = 35.67680;
 const CENTER_LNG = 139.75610;
+const ERROR_REMOVE_DELAY = 5000;
+const PIN_RENDER_DELAY = 50;
+const MAX_PINS = 10;
 const address = document.querySelector('#address');
 
 setFormDisabled();
@@ -64,12 +67,12 @@ const createOfferPin = (offer) => {
 };
 
 const renderMapOffers = (offers) => {
-  offers.slice(0, 11).forEach((offer, offerId) => {
-    setTimeout(() => createOfferPin(offer), 50 * offerId);
+  offers.slice(0, MAX_PINS + 1).forEach((offer, offerId) => {
+    setTimeout(() => createOfferPin(offer), PIN_RENDER_DELAY * offerId);
   });
 };
 
-const mapError = (errCode) => {
+const templateError = (errCode) => {
   const errorElement = document.createElement('div');
   errorElement.innerText = `Не удалось загрузить похожие объявления, код ошибки ${errCode}.`;
   errorElement.style.cssText = `
@@ -87,7 +90,7 @@ const mapError = (errCode) => {
 
   setTimeout(() => {
     errorElement.remove();
-  }, 5000);
+  }, ERROR_REMOVE_DELAY);
 };
 
-getData(renderMapOffers, mapError);
+getData(renderMapOffers, templateError);
