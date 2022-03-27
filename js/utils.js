@@ -1,32 +1,51 @@
-const getRandomPositiveInteger = (a, b) => {
-  const lower = Math.ceil(Math.min(Math.abs(a), Math.abs(b)));
-  const upper = Math.floor(Math.max(Math.abs(a), Math.abs(b)));
+const MODAL_REMOVE_DELAY = 3000;
 
-  const result = Math.random() * (upper - lower + 1) + lower;
+const adForm = document.querySelector('.ad-form');
+const adFormFieldsets = adForm.querySelectorAll('fieldset');
 
-  return Math.floor(result);
-};
+const mapForm = document.querySelector('.map__filters');
+const mapFormFilters = mapForm.querySelectorAll('.map__filter');
+const mapFormFeaturesList = mapForm.querySelector('.map__features');
 
-const getRandomPositiveFloat = (a, b, digits = 1) => {
-  const lower = Math.min(Math.abs(a), Math.abs(b));
-  const upper = Math.max(Math.abs(a), Math.abs(b));
-
-  const result = Math.random() * (upper - lower) + lower;
-
-  return +result.toFixed(digits);
-};
-
-const getRandomArrayElement = (array) => array[getRandomPositiveInteger(0, array.length - 1)];
-
-const getChangedArray = (array) => {
-  const copy = array.slice();
-  const newArray = [];
-
-  for (let i = getRandomPositiveInteger(1, copy.length); i > 0; i--) {
-    newArray.push(copy.splice(getRandomPositiveInteger(0, copy.length - 1), 1)[0]);
+const changeFormCondition = (isDisabled) => {
+  if (isDisabled) {
+    adForm.classList.add('ad-form--disabled');
+    mapForm.classList.add('map__filters--disabled');
+  } else {
+    adForm.classList.remove('ad-form--disabled');
+    mapForm.classList.remove('map__filters--disabled');
   }
 
-  return newArray;
+  mapFormFeaturesList.disabled = isDisabled;
+  adFormFieldsets.forEach((element) => {
+    element.disabled = isDisabled;
+  });
+  mapFormFilters.forEach((element) => {
+    element.disabled = isDisabled;
+  });
 };
 
-export {getRandomPositiveInteger, getRandomPositiveFloat, getRandomArrayElement, getChangedArray};
+const showModal = (modalType) => {
+  const modalTemplate = document.querySelector(`#${modalType}`).content.querySelector(`.${modalType}`);
+  const newModal = modalTemplate.cloneNode(true);
+  document.querySelector('body').appendChild(newModal);
+
+  if (modalType === 'success') {
+    setTimeout(() => newModal.remove(), MODAL_REMOVE_DELAY);
+  } else {
+    newModal.querySelector('button').addEventListener('click', () => newModal.remove());
+    window.addEventListener('keydown', (evt) => {
+      if (evt.key === 'Escape') {
+        newModal.remove();
+      }
+    });
+  }
+};
+
+
+const setFormDisabled = () => changeFormCondition(true);
+const setFormActive = () => changeFormCondition(false);
+const showSuccessModal = () => showModal('success');
+const showErrorModal = () => showModal('error');
+
+export {showSuccessModal, showErrorModal, setFormActive, setFormDisabled};

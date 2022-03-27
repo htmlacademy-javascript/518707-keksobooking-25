@@ -1,3 +1,6 @@
+import {postData} from './server-requests.js';
+import {showSuccessModal, showErrorModal} from './utils.js';
+
 const TYPES_MIN_PRICE = {
   'palace': 10000,
   'flat': 1000,
@@ -73,7 +76,9 @@ adFormSlider.noUiSlider.on('change', () => {
 adFormOfferPrice.addEventListener('input', () => +adFormOfferPrice.value <= +adFormOfferPrice.max ? adFormSlider.noUiSlider.set(adFormOfferPrice.value) : adFormSlider.noUiSlider.set(adFormOfferPrice.max));
 
 adFormOfferType.addEventListener('change', () => {
-  adFormSlider.noUiSlider.set(TYPES_MIN_PRICE[adFormOfferType.value]);
+  if (+adFormOfferPrice.value < +TYPES_MIN_PRICE[adFormOfferType.value]) {
+    adFormSlider.noUiSlider.set(TYPES_MIN_PRICE[adFormOfferType.value]);
+  }
   adFormOfferPrice.placeholder = TYPES_MIN_PRICE[adFormOfferType.value];
   if (adFormOfferPrice.value > 0) {
     pristine.validate(adFormOfferPrice);
@@ -89,15 +94,32 @@ adFormOfferRoomNumber.addEventListener('change', () => pristine.validate(adFormO
 adFormOfferTimein.addEventListener('change', () => setEqualElementsValue(adFormOfferTimein, adFormOfferTimeout));
 adFormOfferTimeout.addEventListener('change', () => setEqualElementsValue(adFormOfferTimeout, adFormOfferTimein));
 
-adForm.addEventListener('submit', (evt) => {
-  evt.preventDefault();
+const setAdFormSubmit = () => {
+  adForm.addEventListener('submit', (evt) => {
+    evt.preventDefault();
 
-  const isValid = pristine.validate();
-  if (isValid) {
-    adForm.submit();
-  } else {
-    adForm.querySelectorAll('.ad-form__element-error').forEach((element) => {
-      element.style.color = element.style.display === 'none' ? '#353535' : '#ff6547';
-    });
-  }
-});
+    const isValid = pristine.validate();
+    if (isValid) {
+      adForm.querySelector('.ad-form__submit').disabled = true;
+      postData(
+        () => {
+          showSuccessModal();
+          adForm.querySelector('.ad-form__submit').disabled = false;
+          adForm.reset();
+          adFormSlider.noUiSlider.reset();
+        },
+        () => {
+          showErrorModal();
+          adForm.querySelector('.ad-form__submit').disabled = false;
+        },
+        new FormData(adForm)
+      );
+    } else {
+      adForm.querySelectorAll('.ad-form__element-error').forEach((element) => {
+        element.style.color = element.style.display === 'none' ? '#353535' : '#ff6547';
+      });
+    }
+  });
+};
+
+setAdFormSubmit();
