@@ -1,19 +1,22 @@
-import {setFormActive, setFormDisabled} from './utils.js';
+import {setFormState, debounce} from './utils.js';
 import {createPopup} from './popup.js';
 import {getData} from './server-requests.js';
+import {filterMapOffers} from './filter.js';
 
 const CENTER_LAT = 35.67680;
 const CENTER_LNG = 139.75610;
 const ERROR_REMOVE_DELAY = 5000;
-const PIN_RENDER_DELAY = 50;
+const RERENDER_DELAY = 500;
 const MAX_PINS = 10;
 const address = document.querySelector('#address');
 
-setFormDisabled();
+setFormState('ad-form', true);
+setFormState('map__filters', true);
 
 const map = L.map('map-canvas')
   .on('load', () => {
-    setFormActive();
+    setFormState('ad-form', false);
+    setFormState('map__filters', false);
     address.value = `${CENTER_LAT}, ${CENTER_LNG}`;
   })
   .setView({
@@ -67,8 +70,15 @@ const createOfferPin = (offer) => {
 };
 
 const renderMapOffers = (offers) => {
-  offers.slice(0, MAX_PINS + 1).forEach((offer, offerId) => {
-    setTimeout(() => createOfferPin(offer), PIN_RENDER_DELAY * offerId);
+  markerGroup.clearLayers();
+  filterMapOffers(offers)
+    .slice(0, MAX_PINS)
+    .forEach((offer) => createOfferPin(offer));
+};
+
+const setFilterChange = (cb) => {
+  document.querySelector('.map__filters').addEventListener('change', () => {
+    cb();
   });
 };
 
@@ -93,4 +103,7 @@ const templateError = (errCode) => {
   }, ERROR_REMOVE_DELAY);
 };
 
-getData(renderMapOffers, templateError);
+getData((offers) => {
+  renderMapOffers(offers);
+  setFilterChange(debounce(() => renderMapOffers(offers), RERENDER_DELAY));
+}, templateError);
