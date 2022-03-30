@@ -1,28 +1,24 @@
 const MODAL_REMOVE_DELAY = 3000;
 
-const adForm = document.querySelector('.ad-form');
-const adFormFieldsets = adForm.querySelectorAll('fieldset');
+const debounce = (callback, timeoutDelay = 500) => {
+  let timeoutId;
 
-const mapForm = document.querySelector('.map__filters');
-const mapFormFilters = mapForm.querySelectorAll('.map__filter');
-const mapFormFeaturesList = mapForm.querySelector('.map__features');
+  return (...rest) => {
+    clearTimeout(timeoutId);
+    timeoutId = setTimeout(() => callback.apply(this, rest), timeoutDelay);
+  };
+};
 
-const changeFormCondition = (isDisabled) => {
+const setFormState = (formClassName, isDisabled = true) => {
+  const form = document.querySelector(`.${formClassName}`);
+  Array.from(form.children).forEach((child) => {
+    child.disabled = isDisabled;
+  });
   if (isDisabled) {
-    adForm.classList.add('ad-form--disabled');
-    mapForm.classList.add('map__filters--disabled');
+    form.classList.add(`${formClassName}--disabled`);
   } else {
-    adForm.classList.remove('ad-form--disabled');
-    mapForm.classList.remove('map__filters--disabled');
+    form.classList.remove(`${formClassName}--disabled`);
   }
-
-  mapFormFeaturesList.disabled = isDisabled;
-  adFormFieldsets.forEach((element) => {
-    element.disabled = isDisabled;
-  });
-  mapFormFilters.forEach((element) => {
-    element.disabled = isDisabled;
-  });
 };
 
 const showModal = (modalType) => {
@@ -42,10 +38,7 @@ const showModal = (modalType) => {
   }
 };
 
-
-const setFormDisabled = () => changeFormCondition(true);
-const setFormActive = () => changeFormCondition(false);
 const showSuccessModal = () => showModal('success');
 const showErrorModal = () => showModal('error');
 
-export {showSuccessModal, showErrorModal, setFormActive, setFormDisabled};
+export {showSuccessModal, showErrorModal, setFormState, debounce};
