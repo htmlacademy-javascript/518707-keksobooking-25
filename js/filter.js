@@ -8,11 +8,17 @@ const typeFilterElement = mapFiltersForm.querySelector('#housing-type');
 const roomsFilterElement = mapFiltersForm.querySelector('#housing-rooms');
 const guestsFilterElement = mapFiltersForm.querySelector('#housing-guests');
 const priceFilterElement = mapFiltersForm.querySelector('#housing-price');
-const features = mapFiltersForm.querySelector('#housing-features');
+const featuresFilterElement = mapFiltersForm.querySelector('#housing-features');
 
 const filterType = (offer) => typeFilterElement.value === 'any' ? true : offer.offer.type === typeFilterElement.value;
 const filterRooms = (offer) => roomsFilterElement.value === 'any' ? true : offer.offer.rooms === +roomsFilterElement.value;
-const filterGuests = (offer) => guestsFilterElement.value === 'any' ? true : offer.offer.guests === +guestsFilterElement.value;
+const filterGuests = (offer) => {
+  switch (guestsFilterElement.value) {
+    case 'any' : return true;
+    case 0 : return offer.offer.guests === 0;
+    default : return offer.offer.guests <= roomsFilterElement.value;
+  }
+};
 const filterPrice = (offer) => {
   switch (priceFilterElement.value) {
     case 'middle' : return offer.offer.price > Price.LOW_PRICE && offer.offer.price <= Price.HIGH_PRICE;
@@ -22,7 +28,7 @@ const filterPrice = (offer) => {
   }
 };
 const filterFeatures = (offer) => {
-  const checkedFeatures = Array.from(features.querySelectorAll('.map__checkbox:checked')).map((element) => element.value);
+  const checkedFeatures = Array.from(featuresFilterElement.querySelectorAll('.map__checkbox:checked')).map((element) => element.value);
   return (offer.offer.features) ? checkedFeatures.every((feature) => offer.offer.features.includes(feature)) : checkedFeatures.length === 0;
 };
 
