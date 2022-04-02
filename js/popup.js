@@ -9,8 +9,8 @@ const TYPES_MAP = {
 const createPopup = (offer) => {
   const offerTemplate = document.querySelector('#card').content.querySelector('.popup');
   const newOffer = offerTemplate.cloneNode(true);
-  const photosContainer = newOffer.querySelector('.popup__photos');
-  const offerPhotoTemplate = newOffer.querySelector('.popup__photo');
+  const photosContainerElement = newOffer.querySelector('.popup__photos');
+  const photoTemplateElement = newOffer.querySelector('.popup__photo');
 
 
   newOffer.querySelector('.popup__avatar').src = offer.author.avatar;
@@ -35,14 +35,14 @@ const createPopup = (offer) => {
   }
 
   if (offer.offer.photos) {
-    photosContainer.textContent = '';
+    photosContainerElement.textContent = '';
     offer.offer.photos.forEach((photo) => {
-      const offerPhoto = offerPhotoTemplate.cloneNode(true);
+      const offerPhoto = photoTemplateElement.cloneNode(true);
       offerPhoto.src = photo;
-      photosContainer.append(offerPhoto);
+      photosContainerElement.append(offerPhoto);
     });
   } else {
-    photosContainer.remove();
+    photosContainerElement.remove();
   }
 
   Array.from(newOffer.children).forEach((element) => {

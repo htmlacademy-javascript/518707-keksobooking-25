@@ -17,15 +17,15 @@ const Color = {
 };
 
 const adForm = document.querySelector('.ad-form');
-const adFormOfferType = adForm.querySelector('#type');
-const adFormOfferPrice = adForm.querySelector('#price');
-const adFormOfferRoomNumber = adForm.querySelector('#room_number');
-const adFormOfferCapacity = adForm.querySelector('#capacity');
-const adFormOfferTimein = adForm.querySelector('#timein');
-const adFormOfferTimeout = adForm.querySelector('#timeout');
-const adFormResetButton = adForm.querySelector('.ad-form__reset');
+const adFormTypeElement = adForm.querySelector('#type');
+const adFormPriceElement = adForm.querySelector('#price');
+const adFormRoomElement = adForm.querySelector('#room_number');
+const adFormCapacityElement = adForm.querySelector('#capacity');
+const adFormTimeinElement = adForm.querySelector('#timein');
+const adFormTimeoutElement = adForm.querySelector('#timeout');
 
-const adFormSlider = adForm.querySelector('.ad-form__slider');
+const adFormSliderElement = adForm.querySelector('.ad-form__slider');
+const adFormResetButton = adForm.querySelector('.ad-form__reset');
 
 const setEqualElementsValue = (referenceElement, dependentElement) => {
   dependentElement.value = referenceElement.value;
@@ -49,12 +49,12 @@ const pristine = new Pristine(adForm,
   }
 );
 
-pristine.addValidator(adFormOfferPrice,
-  (value) => value >= TYPES_MIN_PRICE[adFormOfferType.value],
-  () => `Минимальная цена выбранного типа размещения: ${TYPES_MIN_PRICE[adFormOfferType.value]} руб.`
+pristine.addValidator(adFormPriceElement,
+  (value) => value >= TYPES_MIN_PRICE[adFormTypeElement.value],
+  () => `Минимальная цена выбранного типа размещения: ${TYPES_MIN_PRICE[adFormTypeElement.value]} руб.`
 );
 
-noUiSlider.create(adFormSlider, {
+noUiSlider.create(adFormSliderElement, {
   start: 0,
   connect: 'lower',
   range: {
@@ -69,40 +69,40 @@ noUiSlider.create(adFormSlider, {
   }
 });
 
-adFormSlider.noUiSlider.on('slide', () => {
-  adFormOfferPrice.value = adFormSlider.noUiSlider.get();
+adFormSliderElement.noUiSlider.on('slide', () => {
+  adFormPriceElement.value = adFormSliderElement.noUiSlider.get();
 });
-adFormSlider.noUiSlider.on('change', () => {
-  pristine.validate(adFormOfferPrice);
+adFormSliderElement.noUiSlider.on('change', () => {
+  pristine.validate(adFormPriceElement);
 });
 
-adFormOfferPrice.addEventListener('input', () => +adFormOfferPrice.value <= +adFormOfferPrice.max ? adFormSlider.noUiSlider.set(adFormOfferPrice.value) : adFormSlider.noUiSlider.set(adFormOfferPrice.max));
+adFormPriceElement.addEventListener('input', () => +adFormPriceElement.value <= +adFormPriceElement.max ? adFormSliderElement.noUiSlider.set(adFormPriceElement.value) : adFormSliderElement.noUiSlider.set(adFormPriceElement.max));
 
-adFormOfferType.addEventListener('change', () => {
-  if (+adFormOfferPrice.value < +TYPES_MIN_PRICE[adFormOfferType.value]) {
-    adFormSlider.noUiSlider.set(TYPES_MIN_PRICE[adFormOfferType.value]);
+adFormTypeElement.addEventListener('change', () => {
+  if (+adFormPriceElement.value < +TYPES_MIN_PRICE[adFormTypeElement.value]) {
+    adFormSliderElement.noUiSlider.set(TYPES_MIN_PRICE[adFormTypeElement.value]);
   }
-  adFormOfferPrice.placeholder = TYPES_MIN_PRICE[adFormOfferType.value];
-  if (adFormOfferPrice.value > 0) {
-    pristine.validate(adFormOfferPrice);
+  adFormPriceElement.placeholder = TYPES_MIN_PRICE[adFormTypeElement.value];
+  if (adFormPriceElement.value > 0) {
+    pristine.validate(adFormPriceElement);
   }
 });
 
-pristine.addValidator(adFormOfferCapacity,
-  (value) => (!+value && +adFormOfferRoomNumber.value === MAX_ROOMS) || (+value && +value <= +adFormOfferRoomNumber.value && +adFormOfferRoomNumber.value !== MAX_ROOMS),
-  () => +adFormOfferRoomNumber.value === MAX_ROOMS ? 'Столько комнат не для гостей.' : `Выберите количество гостей, максимум - ${adFormOfferRoomNumber.value}.`
+pristine.addValidator(adFormCapacityElement,
+  (value) => (!+value && +adFormRoomElement.value === MAX_ROOMS) || (+value && +value <= +adFormRoomElement.value && +adFormRoomElement.value !== MAX_ROOMS),
+  () => +adFormRoomElement.value === MAX_ROOMS ? 'Столько комнат не для гостей.' : `Выберите количество гостей, максимум - ${adFormRoomElement.value}.`
 );
-adFormOfferRoomNumber.addEventListener('change', () => pristine.validate(adFormOfferCapacity));
+adFormRoomElement.addEventListener('change', () => pristine.validate(adFormCapacityElement));
 
-adFormOfferTimein.addEventListener('change', () => setEqualElementsValue(adFormOfferTimein, adFormOfferTimeout));
-adFormOfferTimeout.addEventListener('change', () => setEqualElementsValue(adFormOfferTimeout, adFormOfferTimein));
+adFormTimeinElement.addEventListener('change', () => setEqualElementsValue(adFormTimeinElement, adFormTimeoutElement));
+adFormTimeoutElement.addEventListener('change', () => setEqualElementsValue(adFormTimeoutElement, adFormTimeinElement));
 
 const setFormDefault = () => {
   document.querySelector('.leaflet-popup-pane').innerHTML = '';
   document.querySelector('.map__filters').reset();
   removeFormImages();
   adForm.reset();
-  adFormSlider.noUiSlider.reset();
+  adFormSliderElement.noUiSlider.reset();
   resetUserPinPosition();
 };
 

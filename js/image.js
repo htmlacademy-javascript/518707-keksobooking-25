@@ -2,7 +2,7 @@ const FILE_TYPES = ['gif', 'jpg', 'jpeg', 'png'];
 const DEFAULT_AVATAR_SRC = 'img/muffin-grey.svg';
 
 const avatarChooserElement = document.querySelector('#avatar');
-const avatarPreviewImage = document.querySelector('.ad-form-header__preview img');
+const avatarPreviewElement = document.querySelector('.ad-form-header__preview img');
 const photoChooserElement = document.querySelector('#images');
 const photosContainerElement = document.querySelector('.ad-form__photo-container');
 
@@ -12,7 +12,7 @@ avatarChooserElement.addEventListener('change', () => {
   const isImage = FILE_TYPES.some((type) => avatarFileName.endsWith(type));
 
   if (isImage) {
-    avatarPreviewImage.src = URL.createObjectURL(avatar);
+    avatarPreviewElement.src = URL.createObjectURL(avatar);
   }
 });
 
@@ -41,7 +41,7 @@ photoChooserElement.addEventListener('change', () => {
 
 const removeFormImages = () => {
   const photos = document.querySelectorAll('.ad-form__photo');
-  avatarPreviewImage.src = DEFAULT_AVATAR_SRC;
+  avatarPreviewElement.src = DEFAULT_AVATAR_SRC;
   if (photos[0].firstChild) {
     photos.forEach((photo, index) => index === 0 ? photo.firstChild.remove() : photo.remove());
   }
