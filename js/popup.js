@@ -16,7 +16,8 @@ const createPopup = (offer) => {
   newOffer.querySelector('.popup__avatar').src = offer.author.avatar;
   newOffer.querySelector('.popup__title').textContent = offer.offer.title;
   newOffer.querySelector('.popup__text--address').textContent = offer.offer.address;
-  newOffer.querySelector('.popup__text--price').innerHTML = `${offer.offer.price} <span>₽/ночь</span>`;
+  newOffer.querySelector('.popup__text--price').innerHTML = '';
+  newOffer.querySelector('.popup__text--price').insertAdjacentHTML('afterbegin', `${offer.offer.price} <span>₽/ночь</span>`);
   newOffer.querySelector('.popup__type').textContent = TYPES_MAP[offer.offer.type];
   newOffer.querySelector('.popup__text--capacity').textContent = `${offer.offer.rooms} комнаты для ${offer.offer.guests} гостей`;
   newOffer.querySelector('.popup__text--time').textContent = `Заезд после ${offer.offer.checkin}, выезд до ${offer.offer.checkout}`;

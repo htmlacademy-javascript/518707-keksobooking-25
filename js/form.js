@@ -1,5 +1,7 @@
 import {postData} from './server-requests.js';
+import {resetUserPinPosition} from './map.js';
 import {showSuccessModal, showErrorModal} from './utils.js';
+import {removeFormImages} from './image.js';
 
 const TYPES_MIN_PRICE = {
   'palace': 10000,
@@ -9,6 +11,10 @@ const TYPES_MIN_PRICE = {
   'hotel': 3000
 };
 const MAX_ROOMS = 100;
+const Color = {
+  ERROR_COLOR: '#ff6547',
+  DEFAULT_COLOR: '#353535'
+};
 
 const adForm = document.querySelector('.ad-form');
 const adFormOfferType = adForm.querySelector('#type');
@@ -17,6 +23,7 @@ const adFormOfferRoomNumber = adForm.querySelector('#room_number');
 const adFormOfferCapacity = adForm.querySelector('#capacity');
 const adFormOfferTimein = adForm.querySelector('#timein');
 const adFormOfferTimeout = adForm.querySelector('#timeout');
+const adFormResetButton = adForm.querySelector('.ad-form__reset');
 
 const adFormSlider = adForm.querySelector('.ad-form__slider');
 
@@ -57,12 +64,8 @@ noUiSlider.create(adFormSlider, {
   animate: true,
   animationDuration: 1200,
   format: {
-    to: function (value) {
-      return value.toFixed(0);
-    },
-    from: function (value) {
-      return parseFloat(value);
-    }
+    to: (value) => value.toFixed(0),
+    from: (value) => parseFloat(value)
   }
 });
 
@@ -94,6 +97,15 @@ adFormOfferRoomNumber.addEventListener('change', () => pristine.validate(adFormO
 adFormOfferTimein.addEventListener('change', () => setEqualElementsValue(adFormOfferTimein, adFormOfferTimeout));
 adFormOfferTimeout.addEventListener('change', () => setEqualElementsValue(adFormOfferTimeout, adFormOfferTimein));
 
+const setFormDefault = () => {
+  document.querySelector('.leaflet-popup-pane').innerHTML = '';
+  document.querySelector('.map__filters').reset();
+  removeFormImages();
+  adForm.reset();
+  adFormSlider.noUiSlider.reset();
+  resetUserPinPosition();
+};
+
 const setAdFormSubmit = () => {
   adForm.addEventListener('submit', (evt) => {
     evt.preventDefault();
@@ -105,8 +117,7 @@ const setAdFormSubmit = () => {
         () => {
           showSuccessModal();
           adForm.querySelector('.ad-form__submit').disabled = false;
-          adForm.reset();
-          adFormSlider.noUiSlider.reset();
+          setFormDefault();
         },
         () => {
           showErrorModal();
@@ -116,10 +127,15 @@ const setAdFormSubmit = () => {
       );
     } else {
       adForm.querySelectorAll('.ad-form__element-error').forEach((element) => {
-        element.style.color = element.style.display === 'none' ? '#353535' : '#ff6547';
+        element.style.color = element.style.display === 'none' ? Color.DEFAULT_COLOR : Color.ERROR_COLOR;
       });
     }
   });
 };
+
+adFormResetButton.addEventListener('click', (evt) => {
+  evt.preventDefault();
+  setFormDefault();
+});
 
 setAdFormSubmit();

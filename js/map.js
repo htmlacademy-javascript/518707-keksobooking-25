@@ -8,7 +8,7 @@ const CENTER_LNG = 139.75610;
 const ERROR_REMOVE_DELAY = 5000;
 const RERENDER_DELAY = 500;
 const MAX_PINS = 10;
-const address = document.querySelector('#address');
+const addressInputElement = document.querySelector('#address');
 
 setFormState('ad-form', true);
 setFormState('map__filters', true);
@@ -16,8 +16,7 @@ setFormState('map__filters', true);
 const map = L.map('map-canvas')
   .on('load', () => {
     setFormState('ad-form', false);
-    setFormState('map__filters', false);
-    address.value = `${CENTER_LAT}, ${CENTER_LNG}`;
+    addressInputElement.value = `${CENTER_LAT.toFixed(5)}, ${CENTER_LNG.toFixed(5)}`;
   })
   .setView({
     lat: CENTER_LAT,
@@ -53,7 +52,7 @@ const offerPinIcon = L.icon({
 
 userPin.on('move', (evt) => {
   const coordinates = evt.target.getLatLng();
-  address.value = `${coordinates.lat.toFixed(5)}, ${coordinates.lng.toFixed(5)}`;
+  addressInputElement.value = `${coordinates.lat.toFixed(5)}, ${coordinates.lng.toFixed(5)}`;
 });
 
 const markerGroup = L.layerGroup().addTo(map);
@@ -80,6 +79,9 @@ const setFilterChange = (cb) => {
   document.querySelector('.map__filters').addEventListener('change', () => {
     cb();
   });
+  document.querySelector('.map__filters').addEventListener('reset', () => {
+    cb();
+  });
 };
 
 const templateError = (errCode) => {
@@ -103,7 +105,15 @@ const templateError = (errCode) => {
   }, ERROR_REMOVE_DELAY);
 };
 
+const resetUserPinPosition = () => {
+  userPin.setLatLng([CENTER_LAT, CENTER_LNG]);
+  addressInputElement.value = `${CENTER_LAT.toFixed(5)}, ${CENTER_LNG.toFixed(5)}`;
+};
+
 getData((offers) => {
+  setFormState('map__filters', false);
   renderMapOffers(offers);
   setFilterChange(debounce(() => renderMapOffers(offers), RERENDER_DELAY));
 }, templateError);
+
+export {resetUserPinPosition};
