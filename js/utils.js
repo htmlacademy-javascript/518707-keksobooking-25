@@ -1,4 +1,5 @@
-const debounce = (callback, timeoutDelay = 500) => {
+const DEFAULT_TIMEOUT_DELAY = 500;
+const debounce = (callback, timeoutDelay = DEFAULT_TIMEOUT_DELAY) => {
   let timeoutId;
 
   return (...rest) => {
@@ -8,14 +9,14 @@ const debounce = (callback, timeoutDelay = 500) => {
 };
 
 const setFormState = (formClassName, isDisabled = true) => {
-  const form = document.querySelector(`.${formClassName}`);
-  Array.from(form.children).forEach((child) => {
+  const formElement = document.querySelector(`.${formClassName}`);
+  Array.from(formElement.children).forEach((child) => {
     child.disabled = isDisabled;
   });
   if (isDisabled) {
-    form.classList.add(`${formClassName}--disabled`);
+    formElement.classList.add(`${formClassName}--disabled`);
   } else {
-    form.classList.remove(`${formClassName}--disabled`);
+    formElement.classList.remove(`${formClassName}--disabled`);
   }
 };
 
